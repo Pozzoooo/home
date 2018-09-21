@@ -18,19 +18,17 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   }
   
   function reset(agent) {
-      agent.data = { count: 0 };
-      console.log("reset");
+      agent.setContext({
+        name: 'count',
+        lifespan: 0
+      });
   }
  
   function fallback(agent) {
-      agent.add(`I'm sorry, can you try again?`);
+      agent.add(`Sorry, try add`);
   }
-  
+
   function anotherTask(agent) {
-    //   let conv = agent.conv();
-    //   conv.ask('Please choose an item:');
-    //   agent.add(conv);
-      
       const count = addOne(agent);
       agent.add(`${count}`);
   }
@@ -41,12 +39,12 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       var count = 1;
       if (countObj !== null) count = countObj.parameters.count + 1;
       
-    agent.setContext({
+      agent.setContext({
         name: 'count',
-        lifespan: 1,
+        lifespan: 10,
         parameters:{'count': count}
-    });
-      
+      });
+
       return count;
   }
 
