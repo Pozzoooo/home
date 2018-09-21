@@ -11,22 +11,6 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
   const agent = new WebhookClient({ request, response });
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
   console.log('Dialogflow Request body: ' + JSON.stringify(request.body));
- 
-  function welcome(agent) {
-      reset(agent);
-      agent.add(`Welcome to my agent!`);
-  }
-  
-  function reset(agent) {
-      agent.setContext({
-        name: 'count',
-        lifespan: 0
-      });
-  }
- 
-  function fallback(agent) {
-      agent.add(`Sorry, try add`);
-  }
 
   function anotherTask(agent) {
       const count = addOne(agent);
@@ -53,9 +37,14 @@ exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, resp
       agent.add(`reseted`);
   }
 
+  function reset(agent) {
+      agent.setContext({
+        name: 'count',
+        lifespan: 0
+      });
+  }
+
   let intentMap = new Map();
-  intentMap.set('Default Welcome Intent', welcome);
-  intentMap.set('Default Fallback Intent', fallback);
   intentMap.set('another', anotherTask);
   intentMap.set('reset', resetTask);
   agent.handleRequest(intentMap);
